@@ -1,20 +1,21 @@
 import AbortController from 'abort-controller';
 import chalk from 'chalk';
 import convertHrtime from 'convert-hrtime';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import dotenv from 'dotenv';
 import fetch from 'node-fetch';
 
+dayjs.extend(utc);
 dotenv.config();
 
 import { log, logError, sleep } from '../utils';
 import Api from '../models/api';
 import Endpoint from '../models/endpoint';
 import MonitoringJob, { Region } from '../models/monitoring-job';
-import RawReport from '../models/raw-report';
+import RawMeasurement from '../models/raw-measurement';
 
 async function perform(endpointId: string, region: string): Promise<void> {
-  log('perform', endpointId);
-
   const endpoint = await Endpoint.find(endpointId);
 
   if (!endpoint) {
@@ -40,15 +41,14 @@ async function perform(endpointId: string, region: string): Promise<void> {
       signal: controller.signal
     });
 
-    const { milliseconds: requestTime } = convertHrtime(process.hrtime(startTime));
+    const { milliseconds: responseTime } = convertHrtime(process.hrtime(startTime));
 
-    console.log(response.status, requestTime);
-
-    RawReport.create({
+    RawMeasurement.create({
       endpointId,
       region,
-      requestTime,
-      statusCode: response.status
+      responseTime,
+      statusCode: response.status,
+      timestamp: dayjs().utc().unix()
     })
 
   } catch (error) {
@@ -96,7 +96,6 @@ async function perform(endpointId: string, region: string): Promise<void> {
 
     await sleep(100 + Math.random() * 200);
   }
-
 
   log(chalk.green('Worker Finished.'));
 })();

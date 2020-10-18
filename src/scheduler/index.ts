@@ -31,7 +31,6 @@ async function schedule(endpoint: Endpoint, region: Region): Promise<void> {
   }
 }
 
-
 (async function() {
   log(chalk.green('Scheduler Started.'));
 
@@ -63,7 +62,6 @@ async function schedule(endpoint: Endpoint, region: Region): Promise<void> {
 
     await sleep(10_000);
   }
-
 
   log(chalk.green('Scheduler Finished.'));
 })();
