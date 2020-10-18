@@ -1,4 +1,7 @@
+.kube/
 dist/
 node_modules/
 
 *.log
+.env
+
