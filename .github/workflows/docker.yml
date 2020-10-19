@@ -8,25 +8,55 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      -
-        name: Login to DockerHub
+      - name: Checkout Repository
+        uses: actions/checkout@v1
+
+      - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          tags: artmann/guvnor:latest
-      -
-        name: Image digest
+
+      - name: Create Tag
+        id: vars
+        run: echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
+
+      - name: Build Docker image
+        run: docker build --file Dockerfile --tag artmann/guvnor:$GITHUB_RUN_ID .
+
+      - name: Publish Docker image
+        run: docker push artmann/guvnor:$GITHUB_RUN_ID
+
+      - name: Build the latest Docker image
+        run: docker build --file Dockerfile --tag artmann/guvnor:latest .
+
+      - name: Push the latest Docker image
+        run: docker push artmann/guvnor:latest
+
+      - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITAL_OCEAN_TOKEN }}
+
+      - name: Configure Kubernetes
+        uses: digitalocean/action-doctl@master
+        env:
+          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITAL_OCEAN_TOKEN }}
+        with:
+          args: kubernetes cluster kubeconfig show guvnor-cluster > $GITHUB_WORKSPACE/.kubeconfig
+
+      - name: "Cofigure Deployment"
+        run: sed -i 's/guvnor:latest/guvnor:'"$GITHUB_RUN_ID"'/g' $GITHUB_WORKSPACE/kubernetes/*
+
+      - name: "Deploy to Kubernetes"
+        uses: steebchen/kubectl@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        with:
+          args: apply -f $GITHUB_WORKSPACE/kubernetes
+
+      - name: foo
+        run: cat $GITHUB_WORKSPACE/kubernetes/scheduler.yml
