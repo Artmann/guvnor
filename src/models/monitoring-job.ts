@@ -7,9 +7,9 @@ type Regions = {
 };
 
 export const regions: Regions = {
-  'europe-west': true,
+  'europe-west': false,
   'north-america-east': false,
-  'north-america-west': false
+  'north-america-west': true
 };
 
 export type JobStatus = 'completed' | 'failed' | 'pending' | 'running';

@@ -17,3 +17,11 @@ spec:
           image: artmann/guvnor:latest
           imagePullPolicy: Always
           args: ['ingest:start']
+          env:
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: database
+                  key: url
+            - name: DB_DATABASE
+              value: "guvnor-production"

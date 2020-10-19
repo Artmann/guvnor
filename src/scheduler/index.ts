@@ -3,9 +3,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-import { log, logError, sleep } from '../utils';
 import Endpoint from '../models/endpoint';
 import MonitoringJob, { Region, regions } from '../models/monitoring-job';
+import { log, logError, sleep } from '../utils';
 
 async function schedule(endpoint: Endpoint, region: Region): Promise<void> {
   try {

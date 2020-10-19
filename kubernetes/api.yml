@@ -21,4 +21,11 @@ spec:
             - containerPort: 3200
           env:
             - name: PORT
-              value: 3200
+              value: "3200"
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: database
+                  key: url
+            - name: DB_DATABASE
+              value: "guvnor-production"
