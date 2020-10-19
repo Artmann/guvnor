@@ -7,6 +7,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "api:dev": "nodemon src/api/index.ts",
+    "api:start": "node dist/api/index.js",
     "build": "tsc",
     "ingest:dev": "nodemon src/ingest/index.ts",
     "ingest:start": "node dist/ingest/index.js",
@@ -24,6 +26,9 @@
     "dayjs": "^1.9.3",
     "dotenv": "^8.2.0",
     "esix": "^2.3.0",
+    "koa": "^2.13.0",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^9.4.0",
     "mongodb": "^3.6.2",
     "node-fetch": "^2.6.1",
     "reflect-metadata": "^0.1.13",
@@ -31,6 +36,9 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.14",
+    "@types/koa": "^2.11.5",
+    "@types/koa-logger": "^3.1.1",
+    "@types/koa-router": "^7.4.1",
     "@types/mongodb": "^3.5.28",
     "@types/node": "^14.11.8",
     "@types/node-fetch": "^2.5.7",

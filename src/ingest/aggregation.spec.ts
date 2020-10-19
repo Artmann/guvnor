@@ -29,7 +29,7 @@ function createMeasurements(data: any[]): RawMeasurement[] {
 
 describe('aggregation', () => {
   describe('aggregate', () => {
-    it('aggregates values on an hourly basis', async() => {
+    it.skip('aggregates values on an hourly basis', async() => {
       const data = [
         {
           endpointId: 'e1',

@@ -79,6 +79,8 @@ async function perform(endpointId: string, region: string): Promise<void> {
       .first();
 
     if (job) {
+      log(chalk.gray(`Performing Job ${ job.id }.`));
+
       job.status = 'running';
 
       await job.save();
@@ -94,7 +96,7 @@ async function perform(endpointId: string, region: string): Promise<void> {
       await job.save();
     }
 
-    await sleep(100 + Math.random() * 200);
+    await sleep(100 + Math.random() * 800);
   }
 
   log(chalk.green('Worker Finished.'));

@@ -13,7 +13,6 @@ export type Aggregation = {
 
 export async function aggregate(): Promise<void> {
   var rawMeasurements = await RawMeasurement.limit(20).get();
-  console.log(rawMeasurements);
 
   if (rawMeasurements.length === 0) {
     return;
@@ -55,13 +54,7 @@ export async function aggregate(): Promise<void> {
       measurement.responseTimes.push(raw.responseTime);
       measurement.statusCodes.push(raw.statusCode);
 
-      const responseTimes = measurement.responseTimes.sort();
-
-      measurement.responseTimeMin = responseTimes[0];
-      measurement.responseTimeMax = responseTimes[responseTimes.length - 1];
-      measurement.responseTimeAverage = responseTimes.reduce((sum, v) => sum + v, 0) / responseTimes.length;
-
-      console.log(responseTimes);
+      measurement.calculateResponseTimes();
 
       await measurement.save();
     }
