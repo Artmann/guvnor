@@ -30,7 +30,7 @@ spec:
             - name: DB_DATABASE
               value: "guvnor-production"
             - name: DEPOT_VERSION
-              value: $DEPOT_VERSION
+              value: "$DEPOT_VERSION"
 
 ---
 
