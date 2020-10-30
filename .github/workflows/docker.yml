@@ -49,7 +49,8 @@ jobs:
           args: kubernetes cluster kubeconfig show guvnor-cluster > $GITHUB_WORKSPACE/.kubeconfig
 
       - name: "Cofigure Deployment"
-        run: sed -i 's/guvnor:latest/guvnor:'"$GITHUB_RUN_ID"'/g' $GITHUB_WORKSPACE/kubernetes/*
+        run: sed -i 's/guvnor:latest/guvnor:'"$GITHUB_RUN_ID"'/g' $GITHUB_WORKSPACE/kubernetes/* && /
+             sed -i 's/$DEPOT_VERSION/'"$GITHUB_RUN_ID"'/g' $GITHUB_WORKSPACE/kubernetes/*
 
       - name: "Deploy to Kubernetes"
         uses: steebchen/kubectl@master
