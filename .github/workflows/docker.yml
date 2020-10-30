@@ -33,9 +33,6 @@ jobs:
       - name: Push the latest Docker image
         run: docker push artmann/guvnor:latest
 
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
-
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -58,6 +55,3 @@ jobs:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
         with:
           args: apply -f $GITHUB_WORKSPACE/kubernetes
-
-      - name: foo
-        run: cat $GITHUB_WORKSPACE/kubernetes/scheduler.yml
